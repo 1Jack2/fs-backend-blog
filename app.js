@@ -9,9 +9,9 @@ const blogRouter = require('./controllers/blog')
 const url = config.MONGODB_URI
 logger.info('connecting to', url)
 mongoose.connect(url).then(() => {
-    logger.info('connected to MongoDB')
+  logger.info('connected to MongoDB')
 }).catch(error => {
-    logger.error('error connecting to MongoDB:', error.message)
+  logger.error('error connecting to MongoDB:', error.message)
 })
 
 app.use(cors())
