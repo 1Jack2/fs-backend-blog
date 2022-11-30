@@ -11,7 +11,7 @@ const listWithOneBlog = [
 ]
 
 
-const listWithManyBolgs = [
+const listWithManyBlogs = [
   {
     _id: '5a422a851b54a676234d17f7',
     title: 'React patterns',
@@ -40,7 +40,7 @@ const listWithManyBolgs = [
     _id: '5a422b891b54a676234d17fa',
     title: 'First class tests',
     author: 'Robert C. Martin',
-    url: 'http://blog.cleancoder.com/uncle-bob/2017/05/05/TestDefinitions.htmll',
+    url: 'http://blog.cleancoder.com/uncle-bob/2017/05/05/TestDefinitions.html',
     likes: 10,
     __v: 0
   },
@@ -84,7 +84,7 @@ describe('total likes', () => {
   })
 
   test('of a bigger list is calculate right', () => {
-    const result = listHelper.totalLikes(listWithManyBolgs)
+    const result = listHelper.totalLikes(listWithManyBlogs)
     expect(result).toBe(36)
   })
 })
@@ -95,7 +95,7 @@ describe('favorite', () => {
     expect(result).toEqual({})
   })
   test('favorite blog', () => {
-    var resutl = listHelper.favoriteBlog(listWithManyBolgs)
+    var resutl = listHelper.favoriteBlog(listWithManyBlogs)
     expect(resutl).toEqual(
       {
         _id: '5a422b3a1b54a676234d17f9',
