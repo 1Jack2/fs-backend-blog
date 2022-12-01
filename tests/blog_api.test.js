@@ -106,6 +106,17 @@ test('default likes number is 0', async () => {
   expect(response.body.likes).toBe(0)
 })
 
+test('a note can be delete', async () => {
+  let initialBlogs = await helper.blogsInDb()
+  await api.delete(`/api/blogs/${initialBlogs[0].id}`)
+    .send()
+    .expect(204)
+  let blogsAfterDel = await helper.blogsInDb()
+  blogsAfterDel.forEach(blog => {
+    expect(blog.id).not.toEqual(initialBlogs[0].id)
+  })
+})
+
 afterAll(() => {
   mongoose.connection.close()
 })
