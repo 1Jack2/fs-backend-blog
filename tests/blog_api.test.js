@@ -29,7 +29,7 @@ test('all blogs are returned', async () => {
   expect(response.body).toHaveLength(helper.initialBlogs.length)
 })
 
-test('a specific note is within the returned blogs', async () => {
+test('a specific blog is within the returned blogs', async () => {
   const response = await api.get('/api/blogs')
 
   const url = response.body.map(r => r.url)
@@ -106,15 +106,36 @@ test('default likes number is 0', async () => {
   expect(response.body.likes).toBe(0)
 })
 
-test('a note can be delete', async () => {
-  let initialBlogs = await helper.blogsInDb()
+test('a blog can be delete', async () => {
+  const initialBlogs = await helper.blogsInDb()
   await api.delete(`/api/blogs/${initialBlogs[0].id}`)
     .send()
     .expect(204)
-  let blogsAfterDel = await helper.blogsInDb()
+  const blogsAfterDel = await helper.blogsInDb()
   blogsAfterDel.forEach(blog => {
     expect(blog.id).not.toEqual(initialBlogs[0].id)
   })
+})
+
+test('a blog\'s likes can be updated', async () => {
+  const initialBlogs = await helper.blogsInDb()
+  const toUpdate = {id: initialBlogs[0].id, likes: -1}
+  const blogReturned = await api.put(`/api/blogs/${toUpdate.id}`)
+    .send(toUpdate)
+    .expect(200)
+
+  expect(blogReturned.body.likes).toEqual(toUpdate.likes)
+
+  const blogsUpdated = await helper.blogsInDb()
+  let flag = false
+  blogsUpdated.forEach(blog => {
+    const blogToView = JSON.parse(JSON.stringify(blog))
+    if (blogToView.id === toUpdate.id) {
+      flag = true
+      expect(blogToView.likes).toEqual(toUpdate.likes)
+    }
+  })
+  expect(flag).toEqual(true)
 })
 
 afterAll(() => {
