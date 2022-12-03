@@ -21,6 +21,7 @@ mongoose.connect(url).then(() => {
 app.use(cors())
 app.use(express.json())
 
+app.use(middleWire.tokenExtractor)
 app.use('/api/login', loginRouter)
 app.use('/api/blogs', blogRouter)
 app.use('/api/users', userRouter)
