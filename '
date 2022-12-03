@@ -1,39 +1,28 @@
 const mongoose = require('mongoose')
-const supertest = require('supertest').agent
+const supertest = require('supertest').agent()
 const app = require('../app')
 const api = supertest(app)
 const User = require('../models/user')
 const Blog = require('../models/blog')
 const helper = require('./test_helper')
 const bcrypt = require('bcrypt')
-const jwt = require('jsonwebtoken')
 
-
-const initialUsername = 'john doe'
-const initialPassword = '12345'
 const defaultUser = {
-  username: initialUsername,
-  name: 'john doe',
-}
+      username: initialUsername,
+      name: 'john doe',
+    }
 
-const doAuth = (user) => {
-  const userForToken = {
-    username: user.username,
-    id: user._id
-  }
-  const token = jwt.sign(userForToken, process.env.SECRET)
-  api.auth(token, {type: 'bearer'})
-}
+const defaultToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImpvaG4gZG9lIiwiaWQiOiI2MzhiNDU5YmRhMmFmNmJjNDlmYzJiNjAiLCJpYXQiOjE2NzAwNzE3NDB9.85ikT16kc79yoc23EQ3K3tDBKJBrbYq6CKtkpTJKvYk"
 
 describe('when there is initially one user in DB', () => {
+  const initialUsername = 'john doe'
   beforeEach(async () => {
     await User.deleteMany({})
     const initialUser = new User({
       ...defaultUser,
-      passwordHash: await bcrypt.hash(initialPassword, 10)
+      passwordHash: await bcrypt.hash('123456', 10)
     })
     await initialUser.save()
-    doAuth(initialUser)
 
     await Blog.deleteMany({})
   })
@@ -84,11 +73,12 @@ describe('when there is initially one user in DB', () => {
 })
 
 describe('invalid user should not be saved', () => {
+  const initialUsername = 'john doe'
   beforeEach(async () => {
     await User.deleteMany({})
     const initialUser = new User({
       ...defaultUser,
-      passwordHash: await bcrypt.hash(initialPassword, 10)
+      passwordHash: await bcrypt.hash('123456', 10)
     })
     await initialUser.save()
   })

@@ -10,8 +10,6 @@ const requestLogger = (request, response, next) => {
   next()
 }
 
-
-
 const tokenExtractor = (request, response, next) => {
   const getTokenFrom = request => {
     const authorization = request.get('authorization')
@@ -29,9 +27,14 @@ const userExtractor = async (request, response, next) => {
   const decodedToken = jwt.verify(request.token, process.env.SECRET)
   if (!decodedToken.id) {
     response.status(401).json({error: 'token missing or invalid'})
+    return
   }
 
   const user = await User.findById(decodedToken.id)
+  if (!user) {
+    response.status(401).json({error: 'token missing or invalid'})
+    return
+  }
   request.user = user
   next()
 }
